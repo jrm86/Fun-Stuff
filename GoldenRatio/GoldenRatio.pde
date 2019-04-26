@@ -13,7 +13,7 @@ void setup()
 {
   size(600, 600);
   background(0);
- // noStroke();
+
 }
 
 // I don't like these globals. Will rearrange things later
@@ -22,29 +22,54 @@ float angle = PI;
 int dotSize = 20;
 int updateCount = 0;
 int maxUpdates = 500;
-float angleDiff = 1.618; //Approx. golden ratio
+float gRatio = 1.618; //Approx. golden ratio
+float xPos;
+float yPos;
+float i = 0.0001;
 
 void draw()
 {
-
   translate(width/2, height/2);
+
   
-  float xPos = RADIUS * cos(angle);
-  float yPos = RADIUS * sin(angle);
+  //drawPattern(gRatio);
+  
+  drawPattern(i);
+  
+  i = i + 0.0001;
+  
+  delay(5);
+
+}
+
+void reset()
+{
+  //background(0);
+  RADIUS = 10;
+  angle = PI;
+  xPos = 0;
+  yPos = 0;
+}
+
+void drawPattern(float angleDiff)
+{
+  background(0);
+  while(xPos <= height/2){
+  xPos = RADIUS * cos(angle);
+  yPos = RADIUS * sin(angle);
 
   fill(255,255,0);
   ellipse(xPos, yPos, dotSize, dotSize);
   updatePoint(angleDiff);
-  updateCount++;
-  if (updateCount == maxUpdates)
-  {
-    noLoop();
+  //updateCount++;
   }
+  reset();
 }
+
 
 //
 void updatePoint(float newAngle)
 {
-  RADIUS += 0.5;
+  RADIUS += 0.6;
   angle += newAngle * 2*  PI;
 }

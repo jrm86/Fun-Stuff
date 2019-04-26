@@ -48,7 +48,7 @@ void draw()
   
   if (i >= 1) i = INCREMENT;
   
-  //delay(10);
+  delay(5);
 }
 
 void reset()
@@ -69,8 +69,11 @@ void drawPattern(float angleDiff)
   xPos = radius * cos(angle);
   yPos = radius * sin(angle);
 
+  colorMode(HSB);             // Trippy
+  fill(radius%255, 255, 255); // 
+  
   //fill(random(255),random(255),random(256)); //disco ball
-  fill(255,255,0); // less exciting than disco
+  //fill(255,255,0); // less exciting than disco
   ellipse(xPos, yPos, DOTSIZE, DOTSIZE);
   updatePoint(angleDiff);
   }

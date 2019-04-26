@@ -33,7 +33,7 @@ void draw()
   translate(width/2, height/2);
 
   //drawPattern(PI);      // Although PI is irrational, it is very close to 
-                          //   rational approximations.
+                          //   rational approximations (such as 22/7)
                           
   //drawPattern(GRATIO);  // The golden ratio produces a more uniform spread
                           //   showing that it is "more irrational" than PI

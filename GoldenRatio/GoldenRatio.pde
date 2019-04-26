@@ -28,7 +28,7 @@ void draw()
 {
 
   translate(width/2, height/2);
-  //ellipse(0,0, 2 * RADIUS, 2 * RADIUS);
+  
   float xPos = RADIUS * cos(angle);
   float yPos = RADIUS * sin(angle);
 

@@ -69,5 +69,5 @@ void drawPattern(float angleDiff)
 void updatePoint(float newAngle)
 {
   RADIUS += 0.6;
-  angle += newAngle * 2*  PI;
+  angle += newAngle * 2 *  PI;
 }

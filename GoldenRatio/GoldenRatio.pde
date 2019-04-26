@@ -1,19 +1,16 @@
 /*
-    Jonathan Middleton
-    
-    Inspired by this video from Numberphile: https://youtu.be/sj8Sg8qnjOg
-    TODO - Get rid of global vars
-    TODO - Draw an entire pattern, then increment angle update
-    TODO - Text feedback showing current angle
+*    Jonathan Middleton
+*    
+*    Inspired by this video from Numberphile: https://youtu.be/sj8Sg8qnjOg
+*    TODO - Get rid of global vars
+*    TODO - Draw an entire pattern, then increment angle update
+*    TODO - Text feedback showing current angle
 */
-
-
 
 void setup()
 {
   size(600, 600);
   background(0);
-
 }
 
 // I don't like these globals. Will rearrange things later
@@ -25,13 +22,12 @@ int maxUpdates = 500;
 float gRatio = 1.618; //Approx. golden ratio
 float xPos;
 float yPos;
-float i = 0.00001;
+float i = 0.0001;
 
 void draw()
 {
   translate(width/2, height/2);
 
-  
   //drawPattern(gRatio);
 
   drawPattern(i);
@@ -40,11 +36,9 @@ void draw()
   translate(-width/2, -height/2);
   text(i, 15, 30);
   
+  i = i + 0.0001;
   
-  i = i + 0.00001;
-  
-  //delay(5);
-
+  delay(30);
 }
 
 void reset()
@@ -63,14 +57,13 @@ void drawPattern(float angleDiff)
   xPos = RADIUS * cos(angle);
   yPos = RADIUS * sin(angle);
 
-  fill(255,255,0);
+  fill(random(255),random(255),random(256)); //disco ball
   ellipse(xPos, yPos, dotSize, dotSize);
   updatePoint(angleDiff);
   //updateCount++;
   }
   reset();
 }
-
 
 //
 void updatePoint(float newAngle)

@@ -25,7 +25,7 @@ int maxUpdates = 500;
 float gRatio = 1.618; //Approx. golden ratio
 float xPos;
 float yPos;
-float i = 0.0001;
+float i = 0.00001;
 
 void draw()
 {
@@ -33,12 +33,17 @@ void draw()
 
   
   //drawPattern(gRatio);
-  
+
   drawPattern(i);
+  textSize(30);
+  fill(255);
+  translate(-width/2, -height/2);
+  text(i, 15, 30);
   
-  i = i + 0.0001;
   
-  delay(5);
+  i = i + 0.00001;
+  
+  //delay(5);
 
 }
 

@@ -17,7 +17,7 @@ export class Process {
     constructor(num:number){
         this.name = "process" + num.toString();
         this.burstTime =  util.randomInRange(5,10);
-        this.priority = util.randomInRange(1,4);
+        this.priority = util.randomInRange(1,3);
         this.arrival =  util.randomInRange(0,5);
     }// end constructor
 } // End process class

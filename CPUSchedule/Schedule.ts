@@ -24,3 +24,39 @@ class Schedule {
         this.queue = events;
     }// end constructor
 } // end schedule class
+
+/**
+ * 
+ */
+class RoundRobin {
+    constructor(){
+        throw Error("Not implemented");
+    }
+}
+
+/**
+ * 
+ */
+class FCFS {
+    constructor(){
+        throw Error("Not implemented");
+    }
+}
+
+/**
+ * 
+ */
+class Priority {
+    constructor(){
+        throw Error("Not implemented");
+    }
+}
+
+/**
+ * 
+ */
+class MLFQ {
+    constructor(){
+        throw Error("Not implemented");
+    }
+}

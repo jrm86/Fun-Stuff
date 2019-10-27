@@ -11,3 +11,12 @@ export function randomInRange(low:number,high:number){
 
     return Math.floor(((rand)%range)) + low + 1;
 }
+
+export function copyArray<T>(copyArr:Array<T>):T[]{
+    var returnArr = [];
+    for(var item in copyArr){
+        returnArr.push(copyArr[item]);
+    }
+
+    return returnArr;
+}

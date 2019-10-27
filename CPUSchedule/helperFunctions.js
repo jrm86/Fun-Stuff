@@ -13,3 +13,11 @@ function randomInRange(low, high) {
     return Math.floor(((rand) % range)) + low + 1;
 }
 exports.randomInRange = randomInRange;
+function copyArray(copyArr) {
+    var returnArr = [];
+    for (var item in copyArr) {
+        returnArr.push(copyArr[item]);
+    }
+    return returnArr;
+}
+exports.copyArray = copyArray;

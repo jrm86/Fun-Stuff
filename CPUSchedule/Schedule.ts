@@ -9,7 +9,6 @@ import * as util from "./helperFunctions";
 class Event {
     process: Process['name'];
     sequence: number;
-    duration?: number;
 
     constructor(processName: Process['name'], seq: number){
         this.process = processName;
@@ -23,16 +22,18 @@ class Event {
 export class Schedule {
     rQ: ReadyQueue;
     eQ: Array<Event>;
+    avg?: number;
 
     constructor(rQueue:ReadyQueue){
         this.rQ = new ReadyQueue();
-        this.rQ.queue = util.cloneArray(rQueue.queue);
+        // this.rQ.queue = util.cloneArray(rQueue.queue);
+        this.rQ.queue = rQueue.queue;
         this.rQ.length = rQueue.length;
         this.eQ = [];
     }// end constructor
 
     /**
-     * 
+     * Creates a First-Come-First-Serve schedule
      */
     FCFS(){
         var tempQueue = util.cloneArray(this.rQ.queue);
@@ -40,44 +41,58 @@ export class Schedule {
 
         // sort by arrival
         tempQueue.sort(((a:Process,b:Process)=>{
-            return a.arrival - b.arrival;
+            return a.arrival - b.arrival || a.name - b.name;
         }));
 
-        for(var i = 1; i <= length; i++){
-            for(var item in tempQueue){
-                var process = tempQueue[item];
-                if(process.arrival <= i){
-                    if(!process.started){
-                        process.start = i;
-                        process.started = true;
-                    }
-                    if(process.burstTime > 0){
-                        this.eQ.push(new Event(process.name, i));
-                        process.burstTime--;
-                        break;
-                    } else if (!process.completed){
-                        process.duration = i - process.start;
-                        process.completed = true;
-                    }
-                }
-            }
-        }
+        // sort source queue also to keep the same "indexing" in the for loop
+        this.rQ.queue.sort(((a:Process,b:Process)=>{
+            return a.arrival - b.arrival || a.name - b.name;
+        }))
 
-        this.printEvents()
-    }
+        var counter = 0;
+        for(var item in tempQueue){
+            var process = tempQueue[item];
+
+            while(process.arrival <= counter && process.burstTime > 0){
+                this.eQ.push(new Event(process.name,counter));
+                process.burstTime--;
+                counter++;
+            }
+            // update the main queue with duration
+            this.rQ.queue[item].duration = counter - this.rQ.queue[item].arrival;
+        }
+        // this.printEvents()
+        // console.log(this.avgProcTime());
+    } // end fcfs
 
     /**
-     * 
+     * Creates a Round-Robin schedule
+     */
+    RR(){
+        return new Error("not implemented");
+    } // end rr
+
+    /**
+     * Prints the event queue
      */
     printEvents(){
         for(var item in this.eQ){
             var event = this.eQ[item];
-            console.log(event.process + "\t" + event.sequence);
+            console.log("process" + event.process + "\t" + event.sequence);
         }
-    }
+    } // end printEvents
 
-
+    /**
+     * Calculates and returns the average time to complete processes. Not stored;
+     * must be called when needed.
+     */
+    avgProcTime(){
+        var sum = 0;
+        for(var item in this.rQ.queue){
+            var process = this.rQ.queue[item];
+            sum += process.duration;
+        }
+        var avg = sum / this.rQ.queue.length;
+        return avg;
+    } // end avgProcTime
 } // end schedule class
-
-
-

@@ -1,5 +1,5 @@
-import {Process} from "./ReadyQueue";
-import {ReadyQueue} from "./ReadyQueue";
+import { Process } from "./ReadyQueue";
+import { ReadyQueue } from "./ReadyQueue";
 import * as util from "./helperFunctions";
 
 /**
@@ -10,7 +10,7 @@ class Event {
     process: Process['name'];
     sequence: number;
 
-    constructor(processName: Process['name'], seq: number){
+    constructor(processName: Process['name'], seq: number) {
         this.process = processName;
         this.sequence = seq;
     } // end constructor
@@ -24,7 +24,7 @@ export class Schedule {
     eQ: Array<Event>;
     avg?: number;
 
-    constructor(rQueue:ReadyQueue){
+    constructor(rQueue: ReadyQueue) {
         this.rQ = new ReadyQueue();
         // this.rQ.queue = util.cloneArray(rQueue.queue);
         this.rQ.queue = rQueue.queue;
@@ -35,26 +35,26 @@ export class Schedule {
     /**
      * Creates a First-Come-First-Serve schedule
      */
-    FCFS(){
+    FCFS() {
         var tempQueue = util.cloneArray(this.rQ.queue);
         var length = this.rQ.length;
 
         // sort by arrival
-        tempQueue.sort(((a:Process,b:Process)=>{
+        tempQueue.sort(((a: Process, b: Process) => {
             return a.arrival - b.arrival || a.name - b.name;
         }));
 
         // sort source queue also to keep the same "indexing" in the for loop
-        this.rQ.queue.sort(((a:Process,b:Process)=>{
+        this.rQ.queue.sort(((a: Process, b: Process) => {
             return a.arrival - b.arrival || a.name - b.name;
         }))
 
         var counter = 0;
-        for(var item in tempQueue){
+        for (var item in tempQueue) {
             var process = tempQueue[item];
 
-            while(process.arrival <= counter && process.burstTime > 0){
-                this.eQ.push(new Event(process.name,counter));
+            while (process.arrival <= counter && process.burstTime > 0) {
+                this.eQ.push(new Event(process.name, counter));
                 process.burstTime--;
                 counter++;
             }
@@ -68,15 +68,50 @@ export class Schedule {
     /**
      * Creates a Round-Robin schedule
      */
-    RR(){
-        return new Error("not implemented");
+    RR() {
+
+        var tempQueue = util.cloneArray(this.rQ.queue);
+
+        // sort by arrival
+        tempQueue.sort(((a: Process, b: Process) => {
+            return a.arrival - b.arrival || a.priority - b.priority;
+        }));
+
+        // sort source queue also to keep the same "indexing" in the for loop
+        this.rQ.queue.sort(((a: Process, b: Process) => {
+            return a.arrival - b.arrival || a.priority - b.priority;
+        }))
+
+        var emptyCount = 0;
+
+        for (var tick = 0; tick < tempQueue.length;) {
+            
+        while (emptyCount <= tempQueue.length) {
+                for (var item in tempQueue) {
+                    var process = tempQueue[item];
+
+                    if (!process.completed && process.arrival <= tick) {
+
+                        this.eQ.push(new Event(process.name, tick));
+                        tick++;
+                        process.burstTime--;
+                    } else if (process.burstTime == 0) {
+                        process.completed = true;
+                        emptyCount++;
+                    }
+                }
+            }
+        }
+
+        this.printEvents();
+
     } // end rr
 
     /**
      * Prints the event queue
      */
-    printEvents(){
-        for(var item in this.eQ){
+    printEvents() {
+        for (var item in this.eQ) {
             var event = this.eQ[item];
             console.log("process" + event.process + "\t" + event.sequence);
         }
@@ -86,9 +121,9 @@ export class Schedule {
      * Calculates and returns the average time to complete processes. Not stored;
      * must be called when needed.
      */
-    avgProcTime(){
+    avgProcTime() {
         var sum = 0;
-        for(var item in this.rQ.queue){
+        for (var item in this.rQ.queue) {
             var process = this.rQ.queue[item];
             sum += process.duration;
         }

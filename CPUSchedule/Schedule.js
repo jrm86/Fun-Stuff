@@ -56,7 +56,33 @@ var Schedule = /** @class */ (function () {
      * Creates a Round-Robin schedule
      */
     Schedule.prototype.RR = function () {
-        return new Error("not implemented");
+        var tempQueue = util.cloneArray(this.rQ.queue);
+        // sort by arrival
+        tempQueue.sort((function (a, b) {
+            return a.arrival - b.arrival || a.priority - b.priority;
+        }));
+        // sort source queue also to keep the same "indexing" in the for loop
+        this.rQ.queue.sort((function (a, b) {
+            return a.arrival - b.arrival || a.priority - b.priority;
+        }));
+        var emptyCount = 0;
+        for (var tick = 0; tick < tempQueue.length;) {
+            while (emptyCount <= tempQueue.length) {
+                for (var item in tempQueue) {
+                    var process = tempQueue[item];
+                    if (!process.completed && process.arrival <= tick) {
+                        this.eQ.push(new Event(process.name, tick));
+                        tick++;
+                        process.burstTime--;
+                    }
+                    else if (process.burstTime == 0) {
+                        process.completed = true;
+                        emptyCount++;
+                    }
+                }
+            }
+        }
+        this.printEvents();
     }; // end rr
     /**
      * Prints the event queue

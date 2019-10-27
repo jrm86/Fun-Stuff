@@ -1,12 +1,10 @@
-import {ReadyQueue} from "./ReadyQueue";
-import {Schedule} from "./Schedule";
-// import * as util from "./helperFunctions";
+import {ReadyQueue} from "./scripts/ReadyQueue";
+import {Schedule} from "./scripts/Schedule";
 
 // create a queue
 let readyQ = new ReadyQueue();
 
-readyQ.printQueue();
-
+// create a schedule from the queue
 let sched = new Schedule(readyQ);
 
 sched.FCFS();

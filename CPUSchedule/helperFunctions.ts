@@ -9,14 +9,19 @@ export function randomInRange(low:number,high:number){
 
     var rand = Math.random()*100;
 
-    return Math.floor(((rand)%range)) + low + 1;
+    return Math.floor(((rand)%(range+1))) + low;
 }
 
-export function copyArray<T>(copyArr:Array<T>):T[]{
-    var returnArr = [];
-    for(var item in copyArr){
-        returnArr.push(copyArr[item]);
-    }
+/**
+ * Returns a new, cloned array
+ * @param copyArr Array to be copied
+ */
+export function cloneArray<T>(copyArr:Array<T>):T[]{
+    // var returnArr = [];
+    // for(var item in copyArr){
+    //     returnArr.push(copyArr[item]);
+    // }
 
-    return returnArr;
+    // return returnArr;
+    return JSON.parse(JSON.stringify(copyArr)); // this works! complete copy
 }

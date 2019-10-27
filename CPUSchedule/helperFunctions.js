@@ -10,14 +10,19 @@ function randomInRange(low, high) {
     if (range <= 0)
         throw Error("High must be a number larger than Low");
     var rand = Math.random() * 100;
-    return Math.floor(((rand) % range)) + low + 1;
+    return Math.floor(((rand) % (range + 1))) + low;
 }
 exports.randomInRange = randomInRange;
+/**
+ * Returns a new, cloned array
+ * @param copyArr Array to be copied
+ */
 function copyArray(copyArr) {
-    var returnArr = [];
-    for (var item in copyArr) {
-        returnArr.push(copyArr[item]);
-    }
-    return returnArr;
+    // var returnArr = [];
+    // for(var item in copyArr){
+    //     returnArr.push(copyArr[item]);
+    // }
+    // return returnArr;
+    return JSON.parse(JSON.stringify(copyArr)); // this works!
 }
 exports.copyArray = copyArray;

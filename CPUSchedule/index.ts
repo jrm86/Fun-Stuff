@@ -9,7 +9,9 @@ readyQ.printQueue();
 
 let sched = new Schedule(readyQ);
 
-// sched.FCFS();
-sched.RR();
-
+sched.FCFS();
 readyQ.printQueue();
+console.log("Avg: " + sched.avgProcTime());
+sched.RR();
+readyQ.printQueue();
+console.log("Avg: " + sched.avgProcTime());

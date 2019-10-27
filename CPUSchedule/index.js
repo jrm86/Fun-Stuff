@@ -7,4 +7,5 @@ var Schedule_1 = require("./Schedule");
 var readyQ = new ReadyQueue_1.ReadyQueue();
 readyQ.printQueue();
 var sched = new Schedule_1.Schedule(readyQ);
-sched.roundRobin();
+sched.FCFS();
+readyQ.printQueue();

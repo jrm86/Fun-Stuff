@@ -9,4 +9,6 @@ readyQ.printQueue();
 
 let sched = new Schedule(readyQ);
 
-sched.roundRobin();
+sched.FCFS();
+
+readyQ.printQueue();

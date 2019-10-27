@@ -12,7 +12,7 @@ var Process = /** @class */ (function () {
     function Process(num) {
         this.name = "process" + num.toString();
         this.burstTime = util.randomInRange(5, 10);
-        this.priority = util.randomInRange(1, 4);
+        this.priority = util.randomInRange(1, 3);
         this.arrival = util.randomInRange(0, 5);
     } // end constructor
     return Process;
@@ -41,7 +41,7 @@ var ReadyQueue = /** @class */ (function () {
     * Populate a ready queue with processes
     */
     ReadyQueue.prototype.generateProcesses = function () {
-        var processCount = util.randomInRange(10, 20); //Math.floor((Math.random()%10 * 10)) + 11;
+        var processCount = util.randomInRange(10, 20);
         for (var i = 0; i < processCount; i++) {
             var process = new Process(i);
             this.queue.push(process);

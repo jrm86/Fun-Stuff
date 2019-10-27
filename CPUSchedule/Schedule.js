@@ -26,7 +26,7 @@ var Schedule = /** @class */ (function () {
     /**
      *
      */
-    Schedule.prototype.roundRobin = function () {
+    Schedule.prototype.FCFS = function () {
         var tempQueue = util.copyArray(this.rQ.queue);
         var length = this.rQ.length;
         // sort by arrival
@@ -37,16 +37,27 @@ var Schedule = /** @class */ (function () {
             for (var item in tempQueue) {
                 var process = tempQueue[item];
                 if (process.arrival <= i) {
+                    if (!process.started) {
+                        process.start = i;
+                        process.started = true;
+                    }
                     if (process.burstTime > 0) {
                         this.eQ.push(new Event(process.name, i));
                         process.burstTime--;
                         break;
+                    }
+                    else if (!process.completed) {
+                        process.duration = i - process.start;
+                        process.completed = true;
                     }
                 }
             }
         }
         this.printEvents();
     };
+    /**
+     *
+     */
     Schedule.prototype.printEvents = function () {
         for (var item in this.eQ) {
             var event = this.eQ[item];
@@ -64,15 +75,6 @@ var RoundRobin = /** @class */ (function () {
         throw Error("Not implemented");
     }
     return RoundRobin;
-}());
-/**
- *
- */
-var FCFS = /** @class */ (function () {
-    function FCFS() {
-        throw Error("Not implemented");
-    }
-    return FCFS;
 }());
 /**
  *

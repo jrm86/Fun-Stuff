@@ -9,6 +9,7 @@ import * as util from "./helperFunctions";
 class Event {
     process: Process['name'];
     sequence: number;
+    duration?: number;
 
     constructor(processName: Process['name'], seq: number){
         this.process = processName;
@@ -25,7 +26,7 @@ export class Schedule {
 
     constructor(rQueue:ReadyQueue){
         this.rQ = new ReadyQueue();
-        this.rQ.queue = util.copyArray(rQueue.queue);
+        this.rQ.queue = util.cloneArray(rQueue.queue);
         this.rQ.length = rQueue.length;
         this.eQ = [];
     }// end constructor
@@ -33,8 +34,8 @@ export class Schedule {
     /**
      * 
      */
-    roundRobin(){
-        var tempQueue = util.copyArray(this.rQ.queue);
+    FCFS(){
+        var tempQueue = util.cloneArray(this.rQ.queue);
         var length = this.rQ.length;
 
         // sort by arrival
@@ -46,10 +47,17 @@ export class Schedule {
             for(var item in tempQueue){
                 var process = tempQueue[item];
                 if(process.arrival <= i){
+                    if(!process.started){
+                        process.start = i;
+                        process.started = true;
+                    }
                     if(process.burstTime > 0){
                         this.eQ.push(new Event(process.name, i));
                         process.burstTime--;
                         break;
+                    } else if (!process.completed){
+                        process.duration = i - process.start;
+                        process.completed = true;
                     }
                 }
             }
@@ -58,27 +66,23 @@ export class Schedule {
         this.printEvents()
     }
 
+    /**
+     * 
+     */
     printEvents(){
         for(var item in this.eQ){
             var event = this.eQ[item];
             console.log(event.process + "\t" + event.sequence);
         }
     }
+
+
 } // end schedule class
 
 /**
  * 
  */
 class RoundRobin {
-    constructor(){
-        throw Error("Not implemented");
-    }
-}
-
-/**
- * 
- */
-class FCFS {
     constructor(){
         throw Error("Not implemented");
     }

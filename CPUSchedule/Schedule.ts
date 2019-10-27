@@ -69,7 +69,7 @@ export class Schedule {
      * Creates a Round-Robin schedule
      */
     RR() {
-
+        // get our queue copy
         var tempQueue = util.cloneArray(this.rQ.queue);
 
         // sort by arrival
@@ -82,30 +82,47 @@ export class Schedule {
             return a.arrival - b.arrival || a.priority - b.priority;
         }))
 
-        var emptyCount = 0;
+        var count = 0;
 
-        for (var tick = 0; tick < tempQueue.length;) {
-            
-        while (emptyCount <= tempQueue.length) {
-                for (var item in tempQueue) {
-                    var process = tempQueue[item];
+        // don't stop until the ready queue is empty
+        while(tempQueue[0]){
 
-                    if (!process.completed && process.arrival <= tick) {
+            for(var item in tempQueue){
+                var process = tempQueue[item];
 
-                        this.eQ.push(new Event(process.name, tick));
-                        tick++;
-                        process.burstTime--;
-                    } else if (process.burstTime == 0) {
-                        process.completed = true;
-                        emptyCount++;
-                    }
+                // add event to event queue
+                if(process.arrival <= count){
+                    this.eQ.push(new Event(process.name,count));
+                    process.burstTime--;
                 }
+
+                // if process is complete, remove it form the ready queue
+                if(process.burstTime<=0){
+                    var arrIndex = this.getIndex(process, this.rQ);
+                    this.rQ.queue[arrIndex].duration = count - process.arrival;
+                    tempQueue.splice(parseInt(item),1);
+                } 
+                count++;
             }
         }
 
-        this.printEvents();
+        // this.printEvents();
 
     } // end rr
+
+
+    getIndex(process:Process,queue:ReadyQueue):number{
+        
+        for(var item in queue.queue){
+            var proc = queue.queue[item];
+
+            if (proc.name == process.name){
+                return parseInt(item);
+            }
+        }
+        
+        return -1;
+    }
 
     /**
      * Prints the event queue

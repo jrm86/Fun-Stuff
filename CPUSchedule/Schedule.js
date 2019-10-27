@@ -56,6 +56,7 @@ var Schedule = /** @class */ (function () {
      * Creates a Round-Robin schedule
      */
     Schedule.prototype.RR = function () {
+        // get our queue copy
         var tempQueue = util.cloneArray(this.rQ.queue);
         // sort by arrival
         tempQueue.sort((function (a, b) {
@@ -65,25 +66,36 @@ var Schedule = /** @class */ (function () {
         this.rQ.queue.sort((function (a, b) {
             return a.arrival - b.arrival || a.priority - b.priority;
         }));
-        var emptyCount = 0;
-        for (var tick = 0; tick < tempQueue.length;) {
-            while (emptyCount <= tempQueue.length) {
-                for (var item in tempQueue) {
-                    var process = tempQueue[item];
-                    if (!process.completed && process.arrival <= tick) {
-                        this.eQ.push(new Event(process.name, tick));
-                        tick++;
-                        process.burstTime--;
-                    }
-                    else if (process.burstTime == 0) {
-                        process.completed = true;
-                        emptyCount++;
-                    }
+        var count = 0;
+        // don't stop until the ready queue is empty
+        while (tempQueue[0]) {
+            for (var item in tempQueue) {
+                var process = tempQueue[item];
+                // add event to event queue
+                if (process.arrival <= count) {
+                    this.eQ.push(new Event(process.name, count));
+                    process.burstTime--;
                 }
+                // if process is complete, remove it form the ready queue
+                if (process.burstTime <= 0) {
+                    var arrIndex = this.getIndex(process, this.rQ);
+                    this.rQ.queue[arrIndex].duration = count - process.arrival;
+                    tempQueue.splice(parseInt(item), 1);
+                }
+                count++;
             }
         }
-        this.printEvents();
+        // this.printEvents();
     }; // end rr
+    Schedule.prototype.getIndex = function (process, queue) {
+        for (var item in queue.queue) {
+            var proc = queue.queue[item];
+            if (proc.name == process.name) {
+                return parseInt(item);
+            }
+        }
+        return -1;
+    };
     /**
      * Prints the event queue
      */

@@ -8,6 +8,9 @@ export class Process {
     burstTime: number;
     priority: number;
     arrival: number;
+    start?: number;
+    started: boolean;
+    completed: boolean;
     duration?: number;
 
     /**
@@ -19,6 +22,10 @@ export class Process {
         this.burstTime =  util.randomInRange(5,10);
         this.priority = util.randomInRange(1,3);
         this.arrival =  util.randomInRange(0,5);
+        this.start = 0;
+        this.started = false;
+        this.completed = false;
+
     }// end constructor
 } // End process class
 
@@ -42,7 +49,11 @@ export class ReadyQueue{
     printQueue(){
         for(var item in this.queue){
             var process = this.queue[item];
-           console.log(process.name + ":\tPriority: "+ process.priority + "\tDuration: " + process.burstTime + "\tArrival: " + process.arrival);
+           console.log(process.name + ":\tPriority: "+ 
+                       process.priority + "\tBurstTime: " + 
+                       process.burstTime + "\tArrival: " + 
+                       process.arrival + "\tDuration: " +
+                       process.duration);
         }
         console.log("Length of queue: " + this.length);
     } // end printQueue

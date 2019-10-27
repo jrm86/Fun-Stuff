@@ -19,7 +19,7 @@ var Event = /** @class */ (function () {
 var Schedule = /** @class */ (function () {
     function Schedule(rQueue) {
         this.rQ = new ReadyQueue_1.ReadyQueue();
-        this.rQ.queue = util.copyArray(rQueue.queue);
+        this.rQ.queue = util.cloneArray(rQueue.queue);
         this.rQ.length = rQueue.length;
         this.eQ = [];
     } // end constructor
@@ -27,7 +27,7 @@ var Schedule = /** @class */ (function () {
      *
      */
     Schedule.prototype.FCFS = function () {
-        var tempQueue = util.copyArray(this.rQ.queue);
+        var tempQueue = util.cloneArray(this.rQ.queue);
         var length = this.rQ.length;
         // sort by arrival
         tempQueue.sort((function (a, b) {
@@ -67,30 +67,3 @@ var Schedule = /** @class */ (function () {
     return Schedule;
 }()); // end schedule class
 exports.Schedule = Schedule;
-/**
- *
- */
-var RoundRobin = /** @class */ (function () {
-    function RoundRobin() {
-        throw Error("Not implemented");
-    }
-    return RoundRobin;
-}());
-/**
- *
- */
-var Priority = /** @class */ (function () {
-    function Priority() {
-        throw Error("Not implemented");
-    }
-    return Priority;
-}());
-/**
- *
- */
-var MLFQ = /** @class */ (function () {
-    function MLFQ() {
-        throw Error("Not implemented");
-    }
-    return MLFQ;
-}());

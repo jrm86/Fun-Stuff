@@ -79,29 +79,5 @@ export class Schedule {
 
 } // end schedule class
 
-/**
- * 
- */
-class RoundRobin {
-    constructor(){
-        throw Error("Not implemented");
-    }
-}
 
-/**
- * 
- */
-class Priority {
-    constructor(){
-        throw Error("Not implemented");
-    }
-}
 
-/**
- * 
- */
-class MLFQ {
-    constructor(){
-        throw Error("Not implemented");
-    }
-}

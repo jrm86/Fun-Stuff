@@ -17,12 +17,12 @@ exports.randomInRange = randomInRange;
  * Returns a new, cloned array
  * @param copyArr Array to be copied
  */
-function copyArray(copyArr) {
+function cloneArray(copyArr) {
     // var returnArr = [];
     // for(var item in copyArr){
     //     returnArr.push(copyArr[item]);
     // }
     // return returnArr;
-    return JSON.parse(JSON.stringify(copyArr)); // this works!
+    return JSON.parse(JSON.stringify(copyArr)); // this works! complete copy
 }
-exports.copyArray = copyArray;
+exports.cloneArray = cloneArray;

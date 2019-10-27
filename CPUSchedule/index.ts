@@ -9,6 +9,7 @@ readyQ.printQueue();
 
 let sched = new Schedule(readyQ);
 
-sched.FCFS();
+// sched.FCFS();
+sched.RR();
 
 readyQ.printQueue();

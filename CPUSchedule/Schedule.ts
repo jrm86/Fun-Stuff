@@ -1,4 +1,6 @@
 import {Process} from "./ReadyQueue";
+import {ReadyQueue} from "./ReadyQueue";
+import * as util from "./helperFunctions";
 
 /**
  * An event is a snapshot of a particular 'tick' in time, and comprises of a
@@ -17,12 +19,51 @@ class Event {
 /**
  * The schedule is the collection of events, in order of sequence number.
  */
-class Schedule {
-    queue: Array<Event>;
+export class Schedule {
+    rQ: ReadyQueue;
+    eQ: Array<Event>;
 
-    constructor(events:Array<Event>){
-        this.queue = events;
+    constructor(rQueue:ReadyQueue){
+        this.rQ = new ReadyQueue();
+        this.rQ.queue = util.copyArray(rQueue.queue);
+        this.rQ.length = rQueue.length;
+        this.eQ = [];
     }// end constructor
+
+    /**
+     * 
+     */
+    roundRobin(){
+        var tempQueue = util.copyArray(this.rQ.queue);
+        var length = this.rQ.length;
+
+        // sort by arrival
+        tempQueue.sort(((a:Process,b:Process)=>{
+            return a.arrival - b.arrival;
+        }));
+
+        for(var i = 1; i <= length; i++){
+            for(var item in tempQueue){
+                var process = tempQueue[item];
+                if(process.arrival <= i){
+                    if(process.burstTime > 0){
+                        this.eQ.push(new Event(process.name, i));
+                        process.burstTime--;
+                        break;
+                    }
+                }
+            }
+        }
+
+        this.printEvents()
+    }
+
+    printEvents(){
+        for(var item in this.eQ){
+            var event = this.eQ[item];
+            console.log(event.process + "\t" + event.sequence);
+        }
+    }
 } // end schedule class
 
 /**

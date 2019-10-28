@@ -1,5 +1,5 @@
-import {ReadyQueue} from "./scripts/ReadyQueue";
-import {Schedule} from "./scripts/Schedule";
+import {ReadyQueue} from "./ReadyQueue";
+import {Schedule} from "./Schedule";
 
 // create a queue
 let readyQ = new ReadyQueue();

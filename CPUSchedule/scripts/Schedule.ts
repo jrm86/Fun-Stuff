@@ -26,7 +26,6 @@ export class Schedule {
 
     constructor(rQueue: ReadyQueue) {
         this.rQ = new ReadyQueue();
-        // this.rQ.queue = util.cloneArray(rQueue.queue);
         this.rQ.queue = rQueue.queue;
         this.rQ.length = rQueue.length;
         this.eQ = [];
@@ -96,7 +95,7 @@ export class Schedule {
                     process.burstTime--;
                 }
 
-                // if process is complete, remove it form the ready queue
+                // if process is complete, remove it from the ready queue
                 if(process.burstTime<=0){
                     var arrIndex = this.getIndex(process, this.rQ);
                     this.rQ.queue[arrIndex].duration = count - process.arrival;
@@ -105,9 +104,6 @@ export class Schedule {
                 count++;
             }
         }
-
-        // this.printEvents();
-
     } // end rr
 
     /**
@@ -161,19 +157,7 @@ export class Schedule {
             return a.arrival - b.arrival || a.burstTime - b.burstTime;
         }))
 
-        // gotta figure out the logic here
-        // var counter = 0;
-        // for (var item in tempQueue) {
-        //     var process = tempQueue[item];
-
-        //     while (process.arrival <= counter && process.burstTime > 0) {
-        //         this.eQ.push(new Event(process.name, counter));
-        //         process.burstTime--;
-        //         counter++;
-        //     }
-        //     // update the main queue with duration
-        //     this.rQ.queue[item].duration = counter - this.rQ.queue[item].arrival;
-        // }
+        // figure out the logic here
     } // end sjf_n
 
     /**

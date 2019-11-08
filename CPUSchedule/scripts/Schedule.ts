@@ -62,8 +62,6 @@ export class Schedule {
             // update the main queue with duration
             this.rQ.queue[item].duration = counter - this.rQ.queue[item].arrival;
         }
-        // this.printEvents()
-        // console.log(this.avgProcTime());
     } // end fcfs
 
     /**
@@ -112,17 +110,85 @@ export class Schedule {
 
     } // end rr
 
+    /**
+     * Creates a non-preemptive Shortest-Job-First schedule
+     */
+    SJF_n(){
+        // get our queue copy
+        var tempQueue = util.cloneArray(this.rQ.queue);
+        this.eQ = [];
 
-    getIndex(process:Process,queue:ReadyQueue):number{
-        
+        // sort by burst time
+        tempQueue.sort(((a: Process, b: Process) => {
+            return a.arrival - b.arrival || a.burstTime - b.burstTime;
+        }));
+
+        // sort source queue also to keep the same "indexing" in the for loop
+        this.rQ.queue.sort(((a: Process, b: Process) => {
+            return a.arrival - b.arrival || a.burstTime - b.burstTime;
+        }))
+
+        var counter = 0;
+        for (var item in tempQueue) {
+            var process = tempQueue[item];
+
+            while (process.arrival <= counter && process.burstTime > 0) {
+                this.eQ.push(new Event(process.name, counter));
+                process.burstTime--;
+                counter++;
+            }
+            // update the main queue with duration
+            this.rQ.queue[item].duration = counter - this.rQ.queue[item].arrival;
+        }
+    } // end sjf_n
+
+    /**
+     * Creates a preemptive Shortest-Job-First schedule
+     */
+    SJF_p(){
+        throw new Error("not implemented");
+        // get our queue copy
+        var tempQueue = util.cloneArray(this.rQ.queue);
+        this.eQ = [];
+
+        // sort by burst time
+        tempQueue.sort(((a: Process, b: Process) => {
+            return a.arrival - b.arrival || a.burstTime - b.burstTime;
+        }));
+
+        // sort source queue also to keep the same "indexing" in the for loop
+        this.rQ.queue.sort(((a: Process, b: Process) => {
+            return a.arrival - b.arrival || a.burstTime - b.burstTime;
+        }))
+
+        // gotta figure out the logic here
+        // var counter = 0;
+        // for (var item in tempQueue) {
+        //     var process = tempQueue[item];
+
+        //     while (process.arrival <= counter && process.burstTime > 0) {
+        //         this.eQ.push(new Event(process.name, counter));
+        //         process.burstTime--;
+        //         counter++;
+        //     }
+        //     // update the main queue with duration
+        //     this.rQ.queue[item].duration = counter - this.rQ.queue[item].arrival;
+        // }
+    } // end sjf_n
+
+    /**
+     * Returns the index of a process in the given ReadyQueue. Returns
+     * -1 if process is not in the ReadyQueue.
+     * @param process A process
+     * @param queue A ReadyQueue
+     */
+    getIndex(process:Process,queue:ReadyQueue):number{    
         for(var item in queue.queue){
             var proc = queue.queue[item];
-
             if (proc.name == process.name){
                 return parseInt(item);
             }
         }
-        
         return -1;
     }
 

@@ -29,7 +29,7 @@ var ReadyQueue = /** @class */ (function () {
     function ReadyQueue() {
         this.queue = [];
         this.length = 0;
-        this.numberOfProcesses;
+        this.numberOfProcesses = 0;
         this.generateProcesses();
     } // end constructor
     /**
@@ -58,6 +58,7 @@ var ReadyQueue = /** @class */ (function () {
             this.queue.push(process);
             this.length += process.burstTime;
         }
+        console.log("made " + this.numberOfProcesses + " processes ");
     }; // end generate processes
     return ReadyQueue;
 }()); // end readyqueue class

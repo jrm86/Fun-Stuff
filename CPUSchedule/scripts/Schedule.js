@@ -18,7 +18,7 @@ var Event = /** @class */ (function () {
  */
 var Schedule = /** @class */ (function () {
     function Schedule(rQueue) {
-        this.rQ = new ReadyQueue();
+        this.rQ = JSON.parse(JSON.stringify(rQueue));
         this.rQ.queue = cloneArray(rQueue.queue);
         this.rQ.queue = rQueue.queue;
         this.rQ.length = rQueue.length;

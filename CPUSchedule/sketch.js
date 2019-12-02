@@ -5,7 +5,6 @@ let choice = "";
 
 function setup(){
   noLoop();
-  reset();
 
   button = createButton("Print Report");
   button.position(30,450);
@@ -35,22 +34,20 @@ function draw() {
   // put drawing code here
   clear();
   reset();
-
+  let procs = sched.rQ.numberOfProcesses;
+  let len = sched.rQ.length;
   updateChoice().then(()=>{
     var schedule = sched.eQ;
-
-    let procs = sched.rQ.numberOfProcesses;
-    let len = sched.rQ.length;
-
-    fill(0);
-    for(let i = 0; i < procs+2; i++){
-      line(30, i*10+30, len*10+30, i*10+30);
-    }
 
     for(var item in schedule){
       event = schedule[item];
       fill(event.process, 20,20);
       rect(event.sequence*10 + 30, event.process*10+30,10,10);
+    }
+    console.log("drawing " + procs + " lines");
+    fill(0);
+    for(let i = 0; i <= procs; i++){
+      line(20, i*10+30, len*10+40, i*10+30);
     }
   })
 }
@@ -81,23 +78,22 @@ function selectRR(){
   changeSched("rr").then(()=>{
     redraw();
   })
-  // choice = "rr";
-  // redraw();
 }
 
 function selectFCFS(){
   changeSched("fcfs").then(()=>{
     redraw();
   })
-  // choice = "fcfs";
-  // redraw();
 }
 
 function resetSchedule(){
-  readyQ = new ReadyQueue();
-  sched = new Schedule(readyQ);
-  reset();
-  redraw();
+  return new Promise((resolve,reject)=>{
+     readyQ = new ReadyQueue();
+    sched = new Schedule(readyQ);
+    reset();
+    redraw();
+    resolve();
+  })
 }
 
 function printReport(){

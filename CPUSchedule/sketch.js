@@ -9,9 +9,13 @@ function setup(){
   button = createButton("Print Report");
   button.position(30,450);
   button.mousePressed(printReport);
+  
+  button = createButton("Print Comparison");
+  button.position(120,450);
+  button.mousePressed(printComparison);
 
   button = createButton("New Set");
-  button.position(120,450);
+  button.position(150,420);
   button.mousePressed(resetSchedule);
 
   rrButton = createButton("RR");
@@ -44,7 +48,7 @@ function draw() {
       fill(event.process%20, 20,20);
       rect(event.sequence*10 + 30, event.process*10+30,10,10);
     }
-    console.log("drawing " + procs + " lines");
+
     fill(0);
     for(let i = 0; i <= procs; i++){
       line(20, i*10+30, len*10+40, i*10+30);
@@ -74,15 +78,23 @@ function updateChoice(){
   })
 }
 
-function selectRR(){
+function selectRR(callback){
   changeSched("rr").then(()=>{
     redraw();
+  }).then(()=>{
+    if(callback instanceof Function){
+      callback();
+    }
   })
 }
 
-function selectFCFS(){
+function selectFCFS(callback){
   changeSched("fcfs").then(()=>{
     redraw();
+  }).then(()=>{
+    if(callback instanceof Function){
+      callback();
+    }
   })
 }
 
@@ -102,5 +114,46 @@ function printReport(){
   data.push("Length: " + sched.rQ.length);
   data.push("Average time: " + sched.avgProcTime().toString());
   data.push("Average wait: " + sched.avgWaitTime().toString());
-  save(data, 'report.txt');
+
+  for(let i = 0; i < sched.rQ.numberOfProcesses; i++){
+    let process = sched.rQ.queue[i];
+    data.push("\n\tName: " + process.name);
+    data.push("\tArrival: " + process.arrival);
+    data.push("\tBurst Time: " + process.burstTime);
+  }
+
+  save(data, 'single_report.txt');
+}
+
+function printComparison(){
+  let data = [];
+  
+  selectRR(()=>{
+    data.push("Schedule: " + choice);
+    data.push("Length: " + sched.rQ.length);
+    data.push("Average time: " + sched.avgProcTime().toString());
+    data.push("Average wait: " + sched.avgWaitTime().toString());
+    data.push("\nProcesses:");
+    for(let i = 0; i < sched.rQ.numberOfProcesses; i++){
+      let process = sched.rQ.queue[i];
+      data.push("\tName: " + process.name);
+      data.push("\tArrival: " + process.arrival);
+      data.push("\tBurst Time: " + process.burstTime);
+    }
+
+    selectFCFS(()=>{
+      data.push("\nSchedule: " + choice);
+      data.push("Length: " + sched.rQ.length);
+      data.push("Average time: " + sched.avgProcTime().toString());
+      data.push("Average wait: " + sched.avgWaitTime().toString());
+      data.push("\nProcesses:");
+      for(let i = 0; i < sched.rQ.numberOfProcesses; i++){
+        let process = sched.rQ.queue[i];
+        data.push("\tName: " + process.name);
+        data.push("\tArrival: " + process.arrival);
+        data.push("\tBurst Time: " + process.burstTime);
+      }
+      save(data, 'comparison_report.txt');
+    });
+  });
 }

@@ -45,7 +45,6 @@ void draw()
   
 
   drawPattern(i);
-  println("hello");
   //fill(255);
   translate(-width/2, -height/2);
   text(i, 15, 30);

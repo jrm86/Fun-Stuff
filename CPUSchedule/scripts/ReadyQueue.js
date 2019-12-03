@@ -38,7 +38,7 @@ var ReadyQueue = /** @class */ (function () {
     ReadyQueue.prototype.printQueue = function () {
         for (var item in this.queue) {
             var process = this.queue[item];
-            console.log("process" +
+            full_queue.push("process" +
                 process.name + ":\tPriority: " +
                 process.priority + "\tBurstTime: " +
                 process.burstTime + "\tArrival: " +
@@ -58,7 +58,6 @@ var ReadyQueue = /** @class */ (function () {
             this.queue.push(process);
             this.length += process.burstTime;
         }
-        console.log("made " + this.numberOfProcesses + " processes ");
     }; // end generate processes
     return ReadyQueue;
 }()); // end readyqueue class

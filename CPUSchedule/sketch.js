@@ -41,7 +41,7 @@ function draw() {
 
     for(var item in schedule){
       event = schedule[item];
-      fill(event.process, 20,20);
+      fill(event.process%20, 20,20);
       rect(event.sequence*10 + 30, event.process*10+30,10,10);
     }
     console.log("drawing " + procs + " lines");

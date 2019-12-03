@@ -1,7 +1,5 @@
 "use strict";
-// Object.defineProperty(exports, "__esModule", { value: true });
-// var ReadyQueue_1 = require("./ReadyQueue");
-// var util = require("./helperFunctions");
+
 /**
  * An event is a snapshot of a particular 'tick' in time, and comprises of a
  * process name and a squence number.
@@ -13,6 +11,7 @@ var Event = /** @class */ (function () {
     } // end constructor
     return Event;
 }()); // end event class
+
 /**
  * The schedule is the collection of events, in order of sequence number.
  */
@@ -47,8 +46,6 @@ var Schedule = /** @class */ (function () {
                     this.eQ.push(new Event(process.name, counter));
 
                     if((process.arrival <= counter) && !this.rQ.queue[item].started){
-                        // console.log("throwing flag for " + this.rQ.queue[item].name + " at " + counter);
-                        // console.log("arrival for " + this.rQ.queue[item].name + " is " + this.rQ.queue[item].arrival);
                         this.rQ.queue[item].started = true;
                         this.rQ.queue[item].start = counter;
                     }
@@ -170,4 +167,3 @@ var Schedule = /** @class */ (function () {
 
     return Schedule;
 }()); // end schedule class
-// exports.Schedule = Schedule;

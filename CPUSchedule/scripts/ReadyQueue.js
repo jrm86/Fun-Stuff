@@ -1,6 +1,5 @@
 "use strict";
-// Object.defineProperty(exports, "__esModule", { value: true });
-// var util = require("./helperFunctions");
+
 /**
  * A process has a name, duration (burst time), priority, and arrival time.
  */
@@ -21,7 +20,7 @@ var Process = /** @class */ (function () {
     } // end constructor
     return Process;
 }()); // End process class
-// exports.Process = Process;
+
 /**
  * The ready queue has an array of processes waiting to be executed.
  */
@@ -61,4 +60,4 @@ var ReadyQueue = /** @class */ (function () {
     }; // end generate processes
     return ReadyQueue;
 }()); // end readyqueue class
-// exports.ReadyQueue = ReadyQueue;
+

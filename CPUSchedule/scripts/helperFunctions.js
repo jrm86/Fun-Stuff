@@ -1,5 +1,5 @@
 "use strict";
-// Object.defineProperty(exports, "__esModule", { value: true });
+
 /**
  * Inclusively selects an integer number between low and high.
  * @param low Low boundry
@@ -12,7 +12,7 @@ function randomInRange(low, high) {
     var rand = Math.random() * 100;
     return Math.floor(((rand) % (range + 1))) + low;
 }
-// exports.randomInRange = randomInRange;
+
 /**
  * Returns a new, cloned array
  * @param copyArr Array to be copied
@@ -20,4 +20,4 @@ function randomInRange(low, high) {
 function cloneArray(copyArr) {
     return JSON.parse(JSON.stringify(copyArr)); // this works! complete copy
 }
-// exports.cloneArray = cloneArray;
+

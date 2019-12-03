@@ -133,13 +133,6 @@ function printComparison(){
     data.push("Length: " + sched.rQ.length);
     data.push("Average time: " + sched.avgProcTime().toString());
     data.push("Average wait: " + sched.avgWaitTime().toString());
-    data.push("\nProcesses:");
-    for(let i = 0; i < sched.rQ.numberOfProcesses; i++){
-      let process = sched.rQ.queue[i];
-      data.push("\tName: " + process.name);
-      data.push("\tArrival: " + process.arrival);
-      data.push("\tBurst Time: " + process.burstTime);
-    }
 
     selectFCFS(()=>{
       data.push("\nSchedule: " + choice);
@@ -149,7 +142,7 @@ function printComparison(){
       data.push("\nProcesses:");
       for(let i = 0; i < sched.rQ.numberOfProcesses; i++){
         let process = sched.rQ.queue[i];
-        data.push("\tName: " + process.name);
+        data.push("\n\tName: " + process.name);
         data.push("\tArrival: " + process.arrival);
         data.push("\tBurst Time: " + process.burstTime);
       }

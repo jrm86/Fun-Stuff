@@ -128,25 +128,47 @@ function printReport(){
 function printComparison(){
   let data = [];
   
-  selectRR(()=>{
-    data.push("Schedule: " + choice);
-    data.push("Length: " + sched.rQ.length);
-    data.push("Average time: " + sched.avgProcTime().toString());
-    data.push("Average wait: " + sched.avgWaitTime().toString());
+  let totalProcRR = 0;
+  let totalWaitRR = 0;
+  
+  let totalProcFCFS = 0;
+  let totalWaitFCFS = 0;
 
-    selectFCFS(()=>{
-      data.push("\nSchedule: " + choice);
-      data.push("Length: " + sched.rQ.length);
-      data.push("Average time: " + sched.avgProcTime().toString());
-      data.push("Average wait: " + sched.avgWaitTime().toString());
-      data.push("\nProcesses:");
-      for(let i = 0; i < sched.rQ.numberOfProcesses; i++){
-        let process = sched.rQ.queue[i];
-        data.push("\n\tName: " + process.name);
-        data.push("\tArrival: " + process.arrival);
-        data.push("\tBurst Time: " + process.burstTime);
-      }
-      save(data, 'comparison_report.txt');
-    });
-  });
+  for(let i = 0; i < 100; i++){
+
+    selectRR(()=>{
+      totalProcRR += sched.avgProcTime();
+      totalWaitRR += sched.avgWaitTime();
+
+      selectFCFS(()=>{
+        totalProcFCFS += sched.avgProcTime().toString();
+        totalWaitFCFS += sched.avgWaitTime().toString();
+      })
+    })
+  }
+
+  console.log("RR Proc time: " + (totalProcRR/100));
+  console.log("RR Wait time: " + (totalWaitRR/100));
+
+  // selectRR(()=>{
+  //   data.push("Schedule: " + choice);
+  //   data.push("Length: " + sched.rQ.length);
+  //   data.push("Average time: " + sched.avgProcTime().toString());
+  //   data.push("Average wait: " + sched.avgWaitTime().toString());
+
+  //   selectFCFS(()=>{
+  //     data.push("\nSchedule: " + choice);
+  //     data.push("Length: " + sched.rQ.length);
+  //     data.push("Average time: " + sched.avgProcTime().toString());
+  //     data.push("Average wait: " + sched.avgWaitTime().toString());
+  //     data.push("\nProcesses:");
+  //     for(let i = 0; i < sched.rQ.numberOfProcesses; i++){
+  //       let process = sched.rQ.queue[i];
+  //       data.push("\n\tName: " + process.name);
+  //       data.push("\tArrival: " + process.arrival);
+  //       data.push("\tBurst Time: " + process.burstTime);
+  //     }
+  //     save(data, 'comparison_report.txt');
+  //   });
+  // });
 }

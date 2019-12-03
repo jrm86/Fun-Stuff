@@ -19,9 +19,6 @@ var Event = /** @class */ (function () {
 var Schedule = /** @class */ (function () {
     function Schedule(rQueue) {
         this.rQ = JSON.parse(JSON.stringify(rQueue));
-        this.rQ.queue = cloneArray(rQueue.queue);
-        this.rQ.queue = rQueue.queue;
-        this.rQ.length = rQueue.length;
         this.eQ = [];
     } // end constructor
     /**
@@ -40,16 +37,20 @@ var Schedule = /** @class */ (function () {
             this.rQ.queue.sort((function (a, b) {
                 return a.arrival - b.arrival || a.name - b.name;
             }));
+
             var counter = 0;
-            for (var item in tempQueue) {
+
+            for (let item in tempQueue) {
                 var process = tempQueue[item];
+                
                 while (process.arrival <= counter && process.burstTime > 0) {
                     this.eQ.push(new Event(process.name, counter));
-                    // console.log("this item: " + this.rQ.queue[item].name);
-                    // console.log("start status: " + this.rQ.queue[item].started);
-                    if(!this.rQ.queue[item].started){
+
+                    if((process.arrival <= counter) && !this.rQ.queue[item].started){
+                        // console.log("throwing flag for " + this.rQ.queue[item].name + " at " + counter);
+                        // console.log("arrival for " + this.rQ.queue[item].name + " is " + this.rQ.queue[item].arrival);
                         this.rQ.queue[item].started = true;
-                        this.rQ.queue[item].start = item;
+                        this.rQ.queue[item].start = counter;
                     }
                     process.burstTime--;
                     counter++;

@@ -3,28 +3,37 @@ let readyQ = new ReadyQueue();
 let sched = new Schedule(readyQ);
 let choice = "";
 
+let printButton, testButton, testInput, testPrompt, newSetButton, rrButton, fcfsButton;
+
 function setup(){
   noLoop();
 
-  button = createButton("Print Report");
-  button.position(30,450);
-  button.mousePressed(printReport);
+  printButton = createButton("Print Report");
+  printButton.position(30,450);
+  printButton.mousePressed(printReport);
   
-  button = createButton("Print Comparison");
-  button.position(120,450);
-  button.mousePressed(printComparison);
+  testButton = createButton("Run Test");
+  testButton.position(250,450);
+  testButton.mousePressed(printComparison);
 
-  button = createButton("New Set");
-  button.position(150,420);
-  button.mousePressed(resetSchedule);
+  testInput = createInput();
+  testInput.size(testButton.width-5, 20);
+  testInput.position(250,420);
+
+  testPrompt = createElement('h4', 'Enter number of tests');
+  testPrompt.position(250, 375);
+
+  newSetButton = createButton("New Set");
+  newSetButton.position(130,400);
+  newSetButton.mousePressed(resetSchedule);
 
   rrButton = createButton("RR");
-  rrButton.position(30, 420);
+  rrButton.position(30, 400);
   rrButton.mousePressed(selectRR);
 
-  rrButton = createButton("FCFS");
-  rrButton.position(70, 420);
-  rrButton.mousePressed(selectFCFS);
+  fcfsButton = createButton("FCFS");
+  fcfsButton.position(70, 400);
+  fcfsButton.mousePressed(selectFCFS);
 }
 
 function reset(){
@@ -78,29 +87,25 @@ function updateChoice(){
   })
 }
 
-function selectRR(callback){
-  changeSched("rr").then(()=>{
-    redraw();
-  }).then(()=>{
-    if(callback instanceof Function){
-      callback();
-    }
-  })
+async function selectRR(){
+
+  await changeSched("rr");
+  redraw();
+
+  return Promise.resolve();
 }
 
-function selectFCFS(callback){
-  changeSched("fcfs").then(()=>{
-    redraw();
-  }).then(()=>{
-    if(callback instanceof Function){
-      callback();
-    }
-  })
+async function selectFCFS(){
+
+  await changeSched('fcfs');
+  redraw();
+
+  return Promise.resolve();
 }
 
 function resetSchedule(){
   return new Promise((resolve,reject)=>{
-     readyQ = new ReadyQueue();
+    readyQ = new ReadyQueue();
     sched = new Schedule(readyQ);
     reset();
     redraw();
@@ -110,10 +115,16 @@ function resetSchedule(){
 
 function printReport(){
   let data = [];
+
+  data.push('This report details the performance of the ' + choice + ' algorithm.\n'
+          + 'Processing time is the time between process arrival and completion.\n'
+          + 'Wait time is the time between process arrival and start time.\n');
+
   data.push("Schedule: " + choice);
   data.push("Length: " + sched.rQ.length);
-  data.push("Average time: " + sched.avgProcTime().toString());
-  data.push("Average wait: " + sched.avgWaitTime().toString());
+  data.push("Average processing time: " + sched.avgProcTime().toString());
+  data.push("Average wait time: " + sched.avgWaitTime().toString());
+  data.push("\nProcess list:")
 
   for(let i = 0; i < sched.rQ.numberOfProcesses; i++){
     let process = sched.rQ.queue[i];
@@ -122,10 +133,10 @@ function printReport(){
     data.push("\tBurst Time: " + process.burstTime);
   }
 
-  save(data, 'single_report.txt');
+  save(data, 'single_report_' + choice + '.txt');
 }
 
-function printComparison(){
+async function printComparison(){
   let data = [];
   
   let totalProcRR = 0;
@@ -134,41 +145,42 @@ function printComparison(){
   let totalProcFCFS = 0;
   let totalWaitFCFS = 0;
 
-  for(let i = 0; i < 100; i++){
+  let numOfTests;
 
-    selectRR(()=>{
-      totalProcRR += sched.avgProcTime();
-      totalWaitRR += sched.avgWaitTime();
+  data.push('This test creates several randomly generated queues, and compares\n' 
+          + 'the average performance between available scheduling algorithms.\n\n' 
+          + 'Processing time is the time between process arrival and completion.\n'
+          + 'Wait time is the time between process arrival and start time.\n');
 
-      selectFCFS(()=>{
-        totalProcFCFS += sched.avgProcTime().toString();
-        totalWaitFCFS += sched.avgWaitTime().toString();
-      })
-    })
+  if(!testInput.value()){
+    numOfTests = 100;
+    data.push('No input provided. Testing default 100 queues.\n')
+  } else {
+    numOfTests = testInput.value();
+    data.push('Total process queues tested: ' + numOfTests + '\n');
   }
 
-  console.log("RR Proc time: " + (totalProcRR/100));
-  console.log("RR Wait time: " + (totalWaitRR/100));
+  console.log('Running ', numOfTests, ' tests...')
 
-  // selectRR(()=>{
-  //   data.push("Schedule: " + choice);
-  //   data.push("Length: " + sched.rQ.length);
-  //   data.push("Average time: " + sched.avgProcTime().toString());
-  //   data.push("Average wait: " + sched.avgWaitTime().toString());
+  for(let i = 0; i < numOfTests; i++){
+    await resetSchedule();
+    await selectRR();
 
-  //   selectFCFS(()=>{
-  //     data.push("\nSchedule: " + choice);
-  //     data.push("Length: " + sched.rQ.length);
-  //     data.push("Average time: " + sched.avgProcTime().toString());
-  //     data.push("Average wait: " + sched.avgWaitTime().toString());
-  //     data.push("\nProcesses:");
-  //     for(let i = 0; i < sched.rQ.numberOfProcesses; i++){
-  //       let process = sched.rQ.queue[i];
-  //       data.push("\n\tName: " + process.name);
-  //       data.push("\tArrival: " + process.arrival);
-  //       data.push("\tBurst Time: " + process.burstTime);
-  //     }
-  //     save(data, 'comparison_report.txt');
-  //   });
-  // });
+    totalProcRR += sched.avgProcTime();
+    totalWaitRR += sched.avgWaitTime();
+
+    await selectFCFS();
+
+    totalProcFCFS += sched.avgProcTime();
+    totalWaitFCFS += sched.avgWaitTime();
+  }
+  data.push('RR results: \n');
+  data.push('\tAverage Processing time: ' + (totalProcRR/numOfTests));
+  data.push('\tAverage Wait time: ' + (totalWaitRR/numOfTests));
+
+  data.push('\nFCFS results: \n');
+  data.push('\tAverage Processing time: ' + (totalProcFCFS/numOfTests));
+  data.push('\tAverage Wait time: ' + (totalWaitFCFS/numOfTests));
+  save(data, 'comparison_report.txt');
+
 }

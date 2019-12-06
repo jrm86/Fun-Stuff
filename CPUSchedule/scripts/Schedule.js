@@ -97,7 +97,7 @@ var Schedule = /** @class */ (function () {
                 }
             }
         })
-       
+
         // this.printEvents();
     }; // end rr
     Schedule.prototype.getIndex = function (process, queue) {
